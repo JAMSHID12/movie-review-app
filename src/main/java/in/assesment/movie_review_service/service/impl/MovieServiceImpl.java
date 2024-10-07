@@ -49,12 +49,12 @@ public class MovieServiceImpl implements IMovieService {
 			if (userObj.isEmpty()) {
 				throw new NotFoundException("User not found with ID: " + movieDto.getUserId());
 			}
-			final ReviewDto reviewDtoObj = movieDto.getReviewDto();
-			double updatedRating = 0;
-			if(null != reviewDtoObj && 0 != reviewDtoObj.getRating()) {
-				final double average = (double) reviewDtoObj.getRating() / 1;
-				updatedRating = Math.round(average * 100.0)/100.0;
-			}
+//			//final ReviewDto reviewDtoObj = movieDto.getReviewDto();
+//			double updatedRating = 0;
+//			if(null != reviewDtoObj && 0 != reviewDtoObj.getRating()) {
+//				final double average = (double) reviewDtoObj.getRating() / 1;
+//				updatedRating = Math.round(average * 100.0)/100.0;
+//			}
 			
 			Set<Genre> genres = new HashSet<>();
 			for (GenreDto genre : movieDto.getGenres()) {
@@ -73,7 +73,7 @@ public class MovieServiceImpl implements IMovieService {
 			
 			final Movie movieObj = Movie.builder().title(movieDto.getTitle()).description(movieDto.getDescription()).duration(movieDto.getDuration())
 					.releaseDate(movieDto.getReleaseDate()).movieImageUrl(movieDto.getMovieImageUrl()).userDetail(userObj.get()).status(true)
-					.totalRatedCount(1).totalRating(updatedRating).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).genres(genres)
+					.totalRatedCount(0).totalRating(0).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).genres(genres)
 					.languages(languages)
 					.build();
 			

@@ -11,7 +11,7 @@ public interface IReviewService {
 
 	ResponseDto<Review> updateReview(long id, ReviewDto reviewDto);
 
-	ResponseDto<String> deleteReview(long id);
+	ResponseDto<String> updateAverageRatingAfterReviewDeletion(long id);
 
 	ResponseDto<Review> getReviewById(long id);
 

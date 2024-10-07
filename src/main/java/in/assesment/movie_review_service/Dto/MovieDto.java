@@ -27,12 +27,13 @@ public class MovieDto {
     @NotNull(message = "Duration is mandatory")
     private int duration;
     private String movieImageUrl;
+    private String ottPlatformUrl;
 
     @NotEmpty(message = "At least one genre is required")
     private Set<GenreDto> genres;  
     @NotEmpty(message = "At least one language is required")
     private Set<LanguageDto> languages; 
     
-    @NotNull(message = "Review is mandatory")
-    private ReviewDto reviewDto;
+//    @NotNull(message = "Review is mandatory")
+//    private ReviewDto reviewDto;
 }

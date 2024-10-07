@@ -62,6 +62,9 @@ public class Movie {
 	@Column(name = "movie_image_url")
 	private String movieImageUrl;
 	
+	@Column(name = "ott_platform_url")
+	private String ottPlatformUrl;
+	
 	@Builder.Default
 	@Column(name = "is_active")
     private boolean status= false;

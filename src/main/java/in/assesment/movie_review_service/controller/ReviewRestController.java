@@ -75,7 +75,7 @@ public class ReviewRestController {
 	@DeleteMapping("{id}")
 	public ResponseEntity<ResponseDto<String>> deleteReview(@PathVariable("id") long id) {
 	    try {
-	        ResponseDto<String> response = reviewService.deleteReview(id);
+	        ResponseDto<String> response = reviewService.updateAverageRatingAfterReviewDeletion(id);
 	        return ResponseEntity.ok(response);
 	    } catch (NotFoundException e) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
