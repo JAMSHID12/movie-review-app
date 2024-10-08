@@ -14,7 +14,6 @@ import in.assesment.movie_review_service.Dto.GenreDto;
 import in.assesment.movie_review_service.Dto.LanguageDto;
 import in.assesment.movie_review_service.Dto.MovieDto;
 import in.assesment.movie_review_service.Dto.ResponseDto;
-import in.assesment.movie_review_service.Dto.ReviewDto;
 import in.assesment.movie_review_service.custom_exceptions.ConflictException;
 import in.assesment.movie_review_service.custom_exceptions.NotFoundException;
 import in.assesment.movie_review_service.model.Genre;

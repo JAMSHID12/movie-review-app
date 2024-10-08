@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import in.assesment.movie_review_service.Dto.ResponseDto;
@@ -23,26 +24,23 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
 	@Autowired
 	private IUserInfoRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public ResponseDto<UserInfo> createUser(UserInfoDto userInfoDto) {
-
-		try {
-			if (userRepository.findByEmail(userInfoDto.getEmail()).isPresent()) {
-				throw new ConflictException("Email already exists");
-			}
-			final UserInfo userInfo = UserInfo.builder().name(userInfoDto.getUsername()).email(userInfoDto.getEmail())
-					.password(userInfoDto.getPassword()).isActive(true).roles("ROLE_USER")
-					.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
-			final UserInfo savedUser = userRepository.save(userInfo);
-			return new ResponseDto<>(savedUser, "User created successfully", 201);
-		} catch (ConflictException e) {
-			logInfo.error("Conflict occurred: {}", e.getMessage());
-			throw e;
-		} catch (Exception e) {
-			logInfo.error("Error creating user: {}", e.getMessage(), e);
-			return new ResponseDto<>(null, "An error occurred while creating user", 500);
+		logInfo.info("email address: " + userInfoDto.getEmail());
+		Optional<UserInfo> checkEmailExist = userRepository.findByEmail(userInfoDto.getEmail());
+		if (checkEmailExist.isPresent()) {
+			logInfo.error("Conflict occurred: {}");
+			throw new ConflictException("Email already exists");
 		}
+		final UserInfo userInfo = UserInfo.builder().name(userInfoDto.getUsername()).email(userInfoDto.getEmail())
+				.password(passwordEncoder.encode(userInfoDto.getPassword())).isActive(true).roles("ROLE_USER")
+				.createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
+		final UserInfo savedUser = userRepository.save(userInfo);
+		return new ResponseDto<>(savedUser, "User created successfully", 201);
 	}
 
 	@Override

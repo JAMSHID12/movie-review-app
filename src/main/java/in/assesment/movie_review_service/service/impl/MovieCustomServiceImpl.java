@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import in.assesment.movie_review_service.Dto.ResponseDto;
@@ -46,6 +48,11 @@ public class MovieCustomServiceImpl implements IMovieCustomService {
 	public ResponseDto<List<Movie>> filterMovies(Long genreId, Long languageId, Date releaseDate, Double minRating) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Page<Movie> movieWithPagination(Pageable pageable) {
+		return movieRepository.findAll(pageable);
 	}
 
 }
