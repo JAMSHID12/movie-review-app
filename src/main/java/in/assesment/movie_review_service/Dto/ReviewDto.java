@@ -18,8 +18,6 @@ public class ReviewDto {
     private long id;
     @NotBlank
     private String comment;
-    @NotNull(message = "User ID is mandatory")
-    private long userId;
     @NotNull(message = "Movie ID is mandatory")
     private long movieId;
     @Builder.Default

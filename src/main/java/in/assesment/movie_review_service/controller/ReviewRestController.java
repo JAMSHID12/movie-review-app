@@ -3,6 +3,7 @@ package in.assesment.movie_review_service.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import in.assesment.movie_review_service.Dto.ReviewDto;
 import in.assesment.movie_review_service.custom_exceptions.ConflictException;
 import in.assesment.movie_review_service.custom_exceptions.NotFoundException;
 import in.assesment.movie_review_service.model.Review;
+import in.assesment.movie_review_service.model.UserInfo;
 import in.assesment.movie_review_service.service.IReviewService;
 import jakarta.validation.Valid;
 
@@ -29,9 +31,9 @@ public class ReviewRestController {
 	private IReviewService reviewService;
 	
 	@PostMapping
-	public ResponseEntity<ResponseDto<Review>> saveReview(@Valid @RequestBody ReviewDto reviewDto){
+	public ResponseEntity<ResponseDto<Review>> saveReview(@AuthenticationPrincipal final UserInfo userInfo, @Valid @RequestBody ReviewDto reviewDto){
 		try {
-            ResponseDto<Review> response = reviewService.createReview(reviewDto);
+            ResponseDto<Review> response = reviewService.createReview(userInfo, reviewDto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         }catch (NotFoundException e) {
             return new ResponseEntity<>(new ResponseDto<>(null, e.getMessage(), 400), HttpStatus.BAD_REQUEST);
@@ -59,9 +61,9 @@ public class ReviewRestController {
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity<ResponseDto<Review>> updateReview(@PathVariable("id") long id, @RequestBody ReviewDto reviewDto) {
+	public ResponseEntity<ResponseDto<Review>> updateReview(@AuthenticationPrincipal final UserInfo userInfo,@PathVariable("id") long id, @RequestBody ReviewDto reviewDto) {
 	    try {
-	        ResponseDto<Review> response = reviewService.updateReview(id, reviewDto);
+	        ResponseDto<Review> response = reviewService.updateReview(id, reviewDto, userInfo);
 	        return ResponseEntity.ok(response);
 	    } catch (NotFoundException e) {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND)

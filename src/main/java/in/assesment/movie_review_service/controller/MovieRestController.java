@@ -3,6 +3,7 @@ package in.assesment.movie_review_service.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +19,7 @@ import in.assesment.movie_review_service.Dto.ResponseDto;
 import in.assesment.movie_review_service.custom_exceptions.ConflictException;
 import in.assesment.movie_review_service.custom_exceptions.NotFoundException;
 import in.assesment.movie_review_service.model.Movie;
+import in.assesment.movie_review_service.model.UserInfo;
 import in.assesment.movie_review_service.service.IMovieService;
 import jakarta.validation.Valid;
 
@@ -29,9 +31,9 @@ public class MovieRestController {
 	private IMovieService movieService;
 
 	@PostMapping
-	public ResponseEntity<ResponseDto<Movie>> registerMovie(@Valid @RequestBody MovieDto movieDto) {
+	public ResponseEntity<ResponseDto<Movie>> registerMovie(@AuthenticationPrincipal final UserInfo userInfo, @Valid @RequestBody MovieDto movieDto) {
 		try {
-			ResponseDto<Movie> response = movieService.createMovie(movieDto);
+			ResponseDto<Movie> response = movieService.createMovie(userInfo, movieDto);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} catch (ConflictException e) {
 			return new ResponseEntity<>(new ResponseDto<>(null, e.getMessage(), 400), HttpStatus.BAD_REQUEST);
@@ -54,10 +56,10 @@ public class MovieRestController {
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<ResponseDto<Movie>> updateMovie(@PathVariable(required = true) long id,
+	public ResponseEntity<ResponseDto<Movie>> updateMovie(@AuthenticationPrincipal final UserInfo userInfo, @PathVariable(required = true) long id,
 			@RequestBody MovieDto movieDto) {
 		try {
-			ResponseDto<Movie> response = movieService.updateMovie(id, movieDto);
+			ResponseDto<Movie> response = movieService.updateMovie(userInfo, id, movieDto);
 			return ResponseEntity.ok(response);
 		} catch (NotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto<>(null, e.getMessage(), 404));
@@ -68,7 +70,7 @@ public class MovieRestController {
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<ResponseDto<String>> deleteMovie(@PathVariable("id") long id) {
+	public ResponseEntity<ResponseDto<String>> deleteMovie(@AuthenticationPrincipal final UserInfo userInfo, @PathVariable("id") long id) {
 		try {
 			ResponseDto<String> response = movieService.deleteMoive(id);
 			return ResponseEntity.ok(response);
@@ -81,7 +83,7 @@ public class MovieRestController {
 	}
 	
 	@PatchMapping("{id}")
-	public ResponseEntity<ResponseDto<Movie>> patchMovie(@PathVariable("id") long id, @RequestBody MovieDto movieDto) {
+	public ResponseEntity<ResponseDto<Movie>> patchMovie(@AuthenticationPrincipal final UserInfo userInfo, @PathVariable("id") long id, @RequestBody MovieDto movieDto) {
 	    try {
 	        ResponseDto<Movie> response = movieService.deactivate(id, movieDto);
 	        return ResponseEntity.ok(response);

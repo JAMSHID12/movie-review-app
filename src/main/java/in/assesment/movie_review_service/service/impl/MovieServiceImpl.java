@@ -39,14 +39,14 @@ public class MovieServiceImpl implements IMovieService {
 //	private IReviewService reviewService;
 
 	@Override
-	public ResponseDto<Movie> createMovie(MovieDto movieDto) {
+	public ResponseDto<Movie> createMovie(UserInfo userInfo, MovieDto movieDto) {
 		try {
 			if (movieRepository.findByTitle(movieDto.getTitle()).isPresent()) {
 				throw new ConflictException("This movie already exists");
 			}
-			Optional<UserInfo> userObj = userRepository.findById(movieDto.getUserId());
+			Optional<UserInfo> userObj = userRepository.findById(userInfo.getId());
 			if (userObj.isEmpty()) {
-				throw new NotFoundException("User not found with ID: " + movieDto.getUserId());
+				throw new NotFoundException("User not found with ID: " + movieDto.getId());
 			}
 //			//final ReviewDto reviewDtoObj = movieDto.getReviewDto();
 //			double updatedRating = 0;
@@ -108,10 +108,10 @@ public class MovieServiceImpl implements IMovieService {
 	}
 
 	@Override
-	public ResponseDto<Movie> updateMovie(long id, MovieDto movieDto) {
+	public ResponseDto<Movie> updateMovie(UserInfo userInfo ,long id, MovieDto movieDto) {
 		Optional<Movie> movieResult = movieRepository.findById(id);
 		if (movieResult.isEmpty()) {
-			throw new NotFoundException("Movie not found with ID: " + movieDto.getUserId());
+			throw new NotFoundException("Movie not found with ID: " + userInfo.getId());
 		}
 		Set<Genre> genres = new HashSet<>();
 		for (GenreDto genre : movieDto.getGenres()) {

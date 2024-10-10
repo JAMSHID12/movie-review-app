@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,12 +19,11 @@ import jakarta.validation.constraints.NotNull;
 public class MovieDto {
 
     private long id;
-    @NotNull(message = "User ID is mandatory")
-    private long userId;
     @NotBlank(message = "Title is mandatory")
     private String title;
     private String description;
     @NotNull(message = "Release date is mandatory")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date releaseDate;
     @NotNull(message = "Duration is mandatory")
     private int duration;

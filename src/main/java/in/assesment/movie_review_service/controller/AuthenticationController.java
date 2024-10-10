@@ -56,7 +56,7 @@ public class AuthenticationController {
 		String jwtToken = jwtService.generateToken(authenticatedUser);
 
 		LoginResponse loginResponse = LoginResponse.builder().email(authenticatedUser.getEmail())
-				.userName(authenticatedUser.getUsername()).token(jwtToken).tokenType("bearer")
+				.userName(authenticatedUser.getName()).token(jwtToken).tokenType("bearer")
 				.expiresIn(jwtService.getExpirationTime())
 				.build();
 

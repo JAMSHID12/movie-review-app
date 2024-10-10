@@ -35,16 +35,16 @@ public class ReviewServiceImpl implements IReviewService {
 	private IUserInfoRepository userRepository;
 
 	@Override
-	public ResponseDto<Review> createReview(final ReviewDto reviewDto) {
+	public ResponseDto<Review> createReview(final UserInfo userInfo, final ReviewDto reviewDto) {
 		final Optional<Movie> movieOptional = movieRepository.findById(reviewDto.getMovieId());
 		if (movieOptional.isEmpty()) {
 			throw new NotFoundException("Movie does not exist id: " + reviewDto.getMovieId());
 		}
-		final Optional<UserInfo> userInfoOptional = userRepository.findById(reviewDto.getUserId());
+		final Optional<UserInfo> userInfoOptional = userRepository.findById(userInfo.getId());
 		if (userInfoOptional.isEmpty()) {
-			throw new NotFoundException("User does not exist id: " + reviewDto.getUserId());
+			throw new NotFoundException("User does not exist id: " + userInfo.getId());
 		}
-		if (reviewRepository.findByUserIdAndMovieId(reviewDto.getUserId(), reviewDto.getMovieId()).isEmpty()) {
+		if (reviewRepository.findByUserIdAndMovieId( userInfo.getId(), reviewDto.getMovieId()).isEmpty()) {
 			Review reivewObj = new Review();
 			reivewObj.setMovie(movieOptional.get());
 			reivewObj.setUserDetail(userInfoOptional.get());
@@ -107,7 +107,7 @@ public class ReviewServiceImpl implements IReviewService {
 
 
 	@Override
-	public ResponseDto<Review> updateReview(long id, ReviewDto reviewDto) {
+	public ResponseDto<Review> updateReview(long id, ReviewDto reviewDto, final UserInfo userInfo) {
 		final Optional<Review> reviewOptional = reviewRepository.findById(id);
 		if (reviewOptional.isEmpty()) {
 			throw new NotFoundException("Review does not exist by id: " + id);
@@ -116,9 +116,9 @@ public class ReviewServiceImpl implements IReviewService {
 		if (movieOptional.isEmpty()) {
 			throw new NotFoundException("Movie does not exist id: " + reviewDto.getMovieId());
 		}
-		final Optional<UserInfo> userInfoOptional = userRepository.findById(reviewDto.getUserId());
+		final Optional<UserInfo> userInfoOptional = userRepository.findById(userInfo.getId());
 		if (userInfoOptional.isEmpty()) {
-			throw new NotFoundException("User does not exist id: " + reviewDto.getUserId());
+			throw new NotFoundException("User does not exist id: " + userInfo.getId());
 		}
 		reviewOptional.get().setMovie(movieOptional.get());
 		reviewOptional.get().setUserDetail(userInfoOptional.get());
